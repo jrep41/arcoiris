@@ -37,3 +37,35 @@ Esto crea un efecto arcoíris horizontal donde había áreas negras.
 
 
 El resultado es una imagen donde las áreas negras se transforman en vibrantes patrones de arcoíris que siguen la posición horizontal de los píxeles negros originales.
+
+
+
+# Componentes clave de la interfaz de usuario e interacciones del usuario en la aplicación:
+
+# Botones principales:
+Cargar imagen: Abre el cuadro de diálogo de archivo para seleccionar una imagen
+Procesar: Aplica el efecto arcoíris (se activa tras cargar la imagen)
+Guardar: Guarda la imagen procesada (se activa tras el procesamiento)
+
+# Control de umbral:
+Control deslizante "Umbral Negro"
+Ajusta la sensibilidad para lo que se considera "negro" (0-100)
+Los cambios se aplican inmediatamente y actualizan la imagen procesada
+
+# Áreas de visualización de la imagen:
+Dos lienzos contiguos en marcos etiquetados
+Izquierda: "Imagen original"
+Derecha: "Imagen procesada"
+Las imágenes se redimensionan automáticamente para ajustarse al lienzo, manteniendo la relación de aspecto
+
+# Flujo de trabajo del usuario:
+Cargar una imagen con el botón de carga
+La imagen se procesa y se muestra automáticamente
+Ajustar el control deslizante de umbral para ajustar la detección de negro
+Guardar la imagen procesada con el botón de guardar
+
+# Responsivo Diseño:
+Las imágenes se redimensionan al redimensionar la ventana.
+Enlace de eventos: app.original_canvas.bind("<Configure>", on_resize)
+La
+interfaz es sencilla e intuitiva, centrada en la transformación de la imagen, con mínimos controles para que el usuario logre el efecto deseado.

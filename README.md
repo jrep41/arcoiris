@@ -25,10 +25,11 @@ Para los píxeles identificados como "negros" en la máscara, los reemplaza con 
 Esto crea un efecto arcoíris horizontal donde había áreas negras.
 
 4.Implementación del procesamiento:
-    # Crear una máscara para píxeles negros
+    
+# Crear una máscara para píxeles negros
     black_mask = np.all(img_array < self.threshold, axis=2)
 
-    # Reemplazar los píxeles negros con los colores del arcoíris según la posición x
+# Reemplazar los píxeles negros con los colores del arcoíris según la posición x
         for y in range(img_array.shape[0]):
             for x in range(img_array.shape[1]):
                 if black_mask[y, x]:

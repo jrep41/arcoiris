@@ -1,6 +1,6 @@
 # aplicación gráfica para sustituir el color negro por el arcoiris en una imágen. El arcoiris se dibujará en gradiente con capacidad para millones de colores.
 
-from tkinter import *
+from tkinter import Tk, Frame, Button, Label, Scale, Canvas, LabelFrame, TOP, BOTTOM, LEFT, RIGHT, X, BOTH, HORIZONTAL, CENTER, NORMAL, DISABLED
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFilter, ImageEnhance
 from PIL import ImageFont, ImagePalette
@@ -100,7 +100,7 @@ class ArcoirisApp:
         new_width = int(img_width * ratio)
         new_height = int(img_height * ratio)
 
-        resized_image = image.resize((new_width, new_height), Image.LANCZOS)
+        resized_image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(resized_image)
 
         # Store reference to prevent garbage collection
@@ -207,4 +207,6 @@ if __name__ == "__main__":
     app.original_canvas.bind("<Configure>", on_resize)
     app.processed_canvas.bind("<Configure>", on_resize)
 
+    # Start the main event loop
     root.mainloop()
+

@@ -1,4 +1,6 @@
-# aplicación gráfica para sustituir el color negro por el arcoiris en una imágen. El arcoiris se dibujará en gradiente con capacidad para millones de colores.
+# Aplicación gráfica para sustituir el color negro por el arcoíris en una imagen.
+# El arcoíris se dibujará en gradiente con capacidad para millones de colores.
+# Esta aplicación utiliza Tkinter para la interfaz gráfica y PIL para el procesamiento de imágenes.
 
 from tkinter import Tk, Frame, Button, Label, Scale, Canvas, LabelFrame, TOP, BOTTOM, LEFT, RIGHT, X, BOTH, HORIZONTAL, CENTER, NORMAL, DISABLED
 from tkinter import filedialog
@@ -10,42 +12,45 @@ import sys
 import numpy as np
 
 
+# Clase principal de la aplicación Arcoiris
 class ArcoirisApp:
     def __init__(self, root):
+        # Inicializa la aplicación con la ventana raíz
         self.root = root
         self.root.title("Arcoiris - Reemplazar Negro por Arcoiris")
         self.root.geometry("1000x600")
 
-        self.original_image = None
-        self.processed_image = None
-        self.threshold = 30  # Default threshold for black detection
+        self.original_image = None  # Imagen original cargada
+        self.processed_image = None  # Imagen procesada con arcoíris
+        self.threshold = 30  # Umbral por defecto para detectar negro
 
-        self.create_widgets()
+        self.create_widgets()  # Crear los widgets de la interfaz
 
     def create_widgets(self):
-        # Frame for buttons
+        # Crea y configura todos los widgets de la interfaz gráfica
+        # Frame para los botones
         button_frame = Frame(self.root)
         button_frame.pack(side=TOP, fill=X, padx=10, pady=10)
 
-        # Load image button
+        # Botón para cargar imagen
         self.load_button = Button(
             button_frame, text="Cargar Imagen", command=self.load_image
         )
         self.load_button.pack(side=LEFT, padx=5)
 
-        # Process image button
+        # Botón para procesar la imagen
         self.process_button = Button(
             button_frame, text="Procesar", command=self.process_image, state=DISABLED
         )
         self.process_button.pack(side=LEFT, padx=5)
 
-        # Save image button
+        # Botón para guardar la imagen procesada
         self.save_button = Button(
             button_frame, text="Guardar", command=self.save_image, state=DISABLED
         )
         self.save_button.pack(side=LEFT, padx=5)
 
-        # Threshold slider
+        # Etiqueta y slider para el umbral de negro
         Label(button_frame, text="Umbral Negro:").pack(side=LEFT, padx=(20, 5))
         self.threshold_slider = Scale(
             button_frame,
@@ -57,23 +62,24 @@ class ArcoirisApp:
         self.threshold_slider.set(self.threshold)
         self.threshold_slider.pack(side=LEFT, padx=5)
 
-        # Image display area
+        # Área de visualización de imágenes
         self.canvas_frame = Frame(self.root)
         self.canvas_frame.pack(fill=BOTH, expand=True, padx=10, pady=10)
 
-        # Original image
+        # Frame para la imagen original
         self.original_frame = LabelFrame(self.canvas_frame, text="Imagen Original")
         self.original_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=5)
         self.original_canvas = Canvas(self.original_frame, bg="gray90")
         self.original_canvas.pack(fill=BOTH, expand=True)
 
-        # Processed image
+        # Frame para la imagen procesada
         self.processed_frame = LabelFrame(self.canvas_frame, text="Imagen Procesada")
         self.processed_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=5)
         self.processed_canvas = Canvas(self.processed_frame, bg="gray90")
         self.processed_canvas.pack(fill=BOTH, expand=True)
 
     def load_image(self):
+        # Carga una imagen desde el disco duro usando un diálogo de archivos
         file_path = filedialog.askopenfilename(
             filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")]
         )
@@ -82,16 +88,17 @@ class ArcoirisApp:
             self.original_image = Image.open(file_path)
             self.display_image(self.original_image, self.original_canvas)
             self.process_button.config(state=NORMAL)
-            self.process_image()
+            self.process_image()  # Procesar automáticamente al cargar
 
     def display_image(self, image, canvas):
+        # Muestra una imagen en el canvas especificado, redimensionándola para que quepa
         canvas.delete("all")
 
-        # Resize image to fit canvas while maintaining aspect ratio
+        # Obtener dimensiones del canvas
         canvas_width = canvas.winfo_width()
         canvas_height = canvas.winfo_height()
 
-        if canvas_width <= 1:  # Canvas not yet realized
+        if canvas_width <= 1:  # Canvas no realizado aún
             canvas_width = 400
             canvas_height = 400
 
@@ -103,36 +110,37 @@ class ArcoirisApp:
         resized_image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
         photo = ImageTk.PhotoImage(resized_image)
 
-        # Store reference to prevent garbage collection
+        # Almacenar referencia para evitar recolección de basura
         canvas.image = photo
         canvas.create_image(
             canvas_width // 2, canvas_height // 2, image=photo, anchor=CENTER
         )
 
     def update_threshold(self, val):
+        # Actualiza el umbral de detección de negro y reprocesa la imagen si existe
         self.threshold = int(val)
         if self.original_image:
             self.process_image()
 
     def create_rainbow_gradient(self, width, height):
-        # Create rainbow gradient image
+        # Crea una imagen de gradiente de arcoíris horizontal
         rainbow = Image.new("RGB", (width, height))
         draw = ImageDraw.Draw(rainbow)
 
-        # Rainbow colors (red, orange, yellow, green, blue, indigo, violet)
+        # Colores del arcoíris (rojo, naranja, amarillo, verde, azul, índigo, violeta)
         colors = [
-            (255, 0, 0),  # Red
-            (255, 127, 0),  # Orange
-            (255, 255, 0),  # Yellow
-            (0, 255, 0),  # Green
-            (0, 0, 255),  # Blue
-            (75, 0, 130),  # Indigo
-            (148, 0, 211),  # Violet
+            (255, 0, 0),  # Rojo
+            (255, 127, 0),  # Naranja
+            (255, 255, 0),  # Amarillo
+            (0, 255, 0),  # Verde
+            (0, 0, 255),  # Azul
+            (75, 0, 130),  # Índigo
+            (148, 0, 211),  # Violeta
         ]
 
-        # Draw horizontal gradient
+        # Dibujar gradiente horizontal
         for i in range(width):
-            # Calculate color based on position
+            # Calcular color basado en la posición
             idx = (i / width) * (len(colors) - 1)
             idx_floor = int(idx)
             idx_ceil = min(idx_floor + 1, len(colors) - 1)
@@ -153,32 +161,34 @@ class ArcoirisApp:
         return rainbow
 
     def process_image(self):
+        # Procesa la imagen reemplazando píxeles negros con colores del arcoíris
         if self.original_image:
-            # Convert image to numpy array for processing
+            # Convertir imagen a array de numpy para procesamiento
             img_array = np.array(self.original_image.convert("RGB"))
 
-            # Create a mask for black pixels
+            # Crear máscara para píxeles negros
             black_mask = np.all(img_array < self.threshold, axis=2)
 
-            # Create rainbow gradient
+            # Crear gradiente de arcoíris
             rainbow = self.create_rainbow_gradient(self.original_image.width, 1)
             rainbow_array = np.array(rainbow)
 
-            # Create output image
+            # Crear imagen de salida
             result_array = img_array.copy()
 
-            # Replace black pixels with rainbow colors based on x-position
+            # Reemplazar píxeles negros con colores del arcoíris basados en la posición x
             for y in range(img_array.shape[0]):
                 for x in range(img_array.shape[1]):
                     if black_mask[y, x]:
                         result_array[y, x] = rainbow_array[0, x % rainbow.width]
 
-            # Convert back to PIL Image
+            # Convertir de vuelta a imagen PIL
             self.processed_image = Image.fromarray(result_array)
             self.display_image(self.processed_image, self.processed_canvas)
             self.save_button.config(state=NORMAL)
 
     def save_image(self):
+        # Guarda la imagen procesada en el disco duro usando un diálogo de guardar
         if self.processed_image:
             file_path = filedialog.asksaveasfilename(
                 defaultextension=".png",
@@ -194,10 +204,11 @@ class ArcoirisApp:
 
 
 if __name__ == "__main__":
+    # Punto de entrada principal del programa
     root = Tk()
     app = ArcoirisApp(root)
 
-    # Update canvas when window is resized
+    # Actualizar canvas al redimensionar la ventana
     def on_resize(event):
         if app.original_image:
             app.display_image(app.original_image, app.original_canvas)
@@ -207,6 +218,6 @@ if __name__ == "__main__":
     app.original_canvas.bind("<Configure>", on_resize)
     app.processed_canvas.bind("<Configure>", on_resize)
 
-    # Start the main event loop
+    # Iniciar el bucle principal de eventos
     root.mainloop()
 
